@@ -3,7 +3,7 @@ import numpy as np
 
 
 class Conv2D:
-    def __init__(self,units,kernel_size=(3,3),stride=2):
+    def __init__(self,units,input_shape=None,kernel_size=(3,3),stride=2):
         self.input_array = None
         self.kernel_size = kernel_size
         self.units = units
@@ -11,6 +11,7 @@ class Conv2D:
         self.weights = []
         self.result = []
         self.name = "Conv2D"
+        self.input_shape = input_shape
 
 
     def init_weights(self):

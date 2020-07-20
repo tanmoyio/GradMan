@@ -4,10 +4,10 @@ from model import Linear
 import numpy as np
 
 start_time = time.time()
-image = np.random.rand(64,64)
+image = np.random.rand(64,64,3)
 
 model = Linear()
-model.add(Conv2D(64))
+model.add(Conv2D(64,input_shape=(64,64,3)))
 model.add(Flatten())
 model.add(Dense(512))
 model.add(Dense(256))

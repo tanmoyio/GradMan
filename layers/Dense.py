@@ -3,13 +3,14 @@ import numpy as np
 
 
 class Dense:
-    def __init__(self, output_units):
+    def __init__(self, output_units, input_shape=None):
         self.input_array = None
         self.units = None
         self.output_units = output_units
         self.weights = []
         self.result = 0
         self.name = "Dense"
+        self.input_shape = input_shape
 
 
     def init_weights(self):
