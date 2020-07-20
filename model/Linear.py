@@ -15,9 +15,14 @@ class Linear:
 
     def eval(self, inputs):
         self.result = inputs
-        for layer in self.graph:
+        for layer in self.graph: 
             layer.input_array = self.result
             layer.units = layer.input_array.shape[0]
+            try:
+                if layer.weights == []:
+                    layer.init_weights()
+            except:
+                pass
             self.result = layer.calculate()
         return self.result
             

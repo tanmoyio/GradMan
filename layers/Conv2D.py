@@ -12,9 +12,12 @@ class Conv2D:
         self.result = []
         self.name = "Conv2D"
 
-    def calculate(self):
+
+    def init_weights(self):
         self.weights = np.random.rand(self.units, self.kernel_size[0], self.kernel_size[1])
-        
+
+
+    def calculate(self): 
         i, j, row, col = 0, 0, 0, 0
         while i<= self.input_array.shape[1] and i+self.kernel_size[1] <= self.input_array.shape[1]:
             while j<= self.input_array.shape[0] and j+self.kernel_size[0] <= self.input_array.shape[0]:

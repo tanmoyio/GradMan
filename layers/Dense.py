@@ -12,8 +12,11 @@ class Dense:
         self.name = "Dense"
 
 
-    def calculate(self):
+    def init_weights(self):
         self.weights = np.random.rand(self.units,self.output_units)
+
+
+    def calculate(self):
         x1 = np.expand_dims(self.input_array, axis = 0)
         x2 = self.weights
         self.result = np.squeeze(np.matmul(x1,x2),axis=0)
