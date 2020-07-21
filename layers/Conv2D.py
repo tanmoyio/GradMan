@@ -3,7 +3,7 @@ import numpy as np
 
 
 class Conv2D:
-    def __init__(self,units,input_shape=None,kernel_size=(3,3),stride=2):
+    def __init__(self,units,input_shape=None,kernel_size=(3,3),stride=2,activation=None):
         self.input_array = None
         self.kernel_size = kernel_size
         self.units = units
@@ -14,6 +14,7 @@ class Conv2D:
         self.input_shape = input_shape
         self.output_shape = None
         self.number_of_params = units * kernel_size[0] * kernel_size[1]
+        self.activation = activation
 
 
     def init_weights(self):
@@ -35,6 +36,8 @@ class Conv2D:
             row = row + 1
 
         self.result = np.array(self.result).reshape(row,col,self.units)
+        if self.activation != None:
+            self.result = self.activation.calculate(self.result)
         temp_result = self.result
         self.result = []
         self.output_shape = temp_result.shape
