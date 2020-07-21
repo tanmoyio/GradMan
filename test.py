@@ -15,6 +15,8 @@ model.add(Dense(64))
 model.summary()
 
 print(model.eval(image))
+
+print(model.eval(image))
 end_time = time.time()
 print(f"Total execution time::  {end_time - start_time}")
 

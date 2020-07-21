@@ -11,8 +11,8 @@ class Linear:
         
 
     def summary(self):
-        temp_shape = self.graph[0].input_shape
-        self.eval(np.ones(temp_shape))
+        #temp_shape = self.graph[0].input_shape
+        #self.eval(np.random.rand(64,64,3))
         print("-"*60)
         print("Layer          Output shape         Parameters")
         for index,layer in enumerate(self.graph):
