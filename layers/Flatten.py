@@ -6,6 +6,8 @@ class Flatten:
         self.input_array = None
         self.result = 0
         self.name = "Flatten"
+        self.output_shape = None
+        self.number_of_params = 0
 
     def calculate(self):
         input_shape = self.input_array.shape
@@ -16,6 +18,7 @@ class Flatten:
                 temp = np.concatenate((temp,slices),axis=0)
             result = temp
             temp = temp[0]
-        self.result = result 
+        self.result = result
+        self.output_shape = self.result.shape
         return self.result
 

@@ -13,10 +13,10 @@ class Linear:
     def summary(self):
         temp_shape = self.graph[0].input_shape
         self.eval(np.ones(temp_shape))
-        print("-"*60)
-        print("Layer          Output shape         Parameters")
+        print("\n__Network Architecture__")
         for index,layer in enumerate(self.graph):
-            print(index,layer.name)
+            print(index,layer.name,layer.output_shape,layer.number_of_params)
+        print(f"Total number of parameters: {sum([i.number_of_params for i in self.graph]):,}\n\n")
 
     def eval(self, inputs):
         self.result = inputs

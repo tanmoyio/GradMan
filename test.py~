@@ -26,6 +26,7 @@ model2.add(Dense(64, input_shape=(50,)))
 model2.add(Dense(32))
 model2.add(Dense(1))
 model2.summary()
+model2.summary()
 print(model2.eval(np.random.rand(50,)))
 
 

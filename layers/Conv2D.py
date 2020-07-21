@@ -12,6 +12,8 @@ class Conv2D:
         self.result = []
         self.name = "Conv2D"
         self.input_shape = input_shape
+        self.output_shape = None
+        self.number_of_params = units * kernel_size[0] * kernel_size[1]
 
 
     def init_weights(self):
@@ -32,8 +34,9 @@ class Conv2D:
             j = 0
             row = row + 1
 
-        self.result = np.array(self.result).reshape(self.units,row,col)
+        self.result = np.array(self.result).reshape(row,col,self.units)
         temp_result = self.result
         self.result = []
+        self.output_shape = temp_result.shape
         return temp_result
 
