@@ -24,10 +24,15 @@ class Conv2D:
     def calculate(self): 
         i, j, row, col = 0, 0, 0, 0
         sum_conv = 0
-        while i<= self.input_array.shape[1] and i+self.kernel_size[1] <= self.input_array.shape[1]:
-            while j<= self.input_array.shape[0] and j+self.kernel_size[0] <= self.input_array.shape[0]:
-                sum_conv = [np.sum(np.multiply(self.input_array[i:i+3,j:j+3],weight)) for weight in self.weights]
-                self.result.append(sum_conv)
+        if self.input_array.shape ==3:
+            self.input_array = expand_dims(self.input_array, axis = 1)
+        
+        while i<= self.input_array.shape[0] and i+self.kernel_size[0] <= self.input_array.shape[0]:
+            while j<= self.input_array.shape[1] and j+self.kernel_size[1] <= self.input_array.shape[1]:
+                for weight in self.weights:
+                    sum_conv = np.sum([np.multiply(slice_mat[i:i+self.kernel_size[0], j:j+self.kernel_size[1]],weight) for slice_mat in self.input_array.reshape(self.input_array.shape[::-1])])
+                    self.result.append(sum_conv)
+                    sum_conv = 0
                 j = j + self.stride
                 if i == 0:
                     col = col + 1
@@ -42,4 +47,6 @@ class Conv2D:
         self.result = []
         self.output_shape = temp_result.shape
         return temp_result
+        
+
 
