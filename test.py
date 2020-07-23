@@ -5,10 +5,10 @@ import numpy as np
 from activation import Sigmoid
 
 start_time = time.time()
-image = np.random.rand(64,64,12)
+image = np.random.rand(64,64)
 
 model = Linear()
-model.add(Conv2D(64,input_shape=(64,64,12),activation=Sigmoid))
+model.add(Conv2D(64,input_shape=(64,64),activation=Sigmoid))
 model.add(MaxPooling2D((2,2)))
 model.add(Conv2D(128,activation=Sigmoid))
 model.add(MaxPooling2D((2,2)))

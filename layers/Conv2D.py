@@ -24,8 +24,9 @@ class Conv2D:
     def calculate(self): 
         i, j, row, col = 0, 0, 0, 0
         sum_conv = 0
-        if self.input_array.shape ==3:
-            self.input_array = expand_dims(self.input_array, axis = 1)
+        if len(self.input_array.shape) ==2:
+            self.input_array = np.expand_dims(self.input_array, axis = 2)
+            print("working")
         
         while i<= self.input_array.shape[0] and i+self.kernel_size[0] <= self.input_array.shape[0]:
             while j<= self.input_array.shape[1] and j+self.kernel_size[1] <= self.input_array.shape[1]:
