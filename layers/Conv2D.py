@@ -26,7 +26,6 @@ class Conv2D:
         sum_conv = 0
         if len(self.input_array.shape) ==2:
             self.input_array = np.expand_dims(self.input_array, axis = 2)
-            print("working")
         
         while i<= self.input_array.shape[0] and i+self.kernel_size[0] <= self.input_array.shape[0]:
             while j<= self.input_array.shape[1] and j+self.kernel_size[1] <= self.input_array.shape[1]:

@@ -1,10 +1,13 @@
 import numpy as np
+import itertools
 
 
 class Linear:
     def __init__(self):
         self.graph = []
         self.result = 0
+        self.optimizer = None
+        self.loss = None
 
     def add(self, layer):
         self.graph.append(layer)
@@ -37,6 +40,22 @@ class Linear:
                 pass
             self.result = layer.calculate()
         return self.result
+
+    def compile(self,optimizer,loss):
+        self.optimizer = optimizer
+        self.loss = loss
+
+
+    def fit(self,input_batch,label_batch,epochs,batch_size=32):
+        number_of_batchs = input_batch.shape[0]/batch_size
+        input_batch=np.array_split(input_batch,number_of_batchs)
+        label_batch=np.array_split(label_batch,number_of_batchs)
+        for (i,j) in enumerate(zip(input_batch,label_batch)):
+            pred_label_batch = np.array([self.eval(k) for k in j[0]])/40000000000
+            print(pred_label_batch)
+            ground_label_batch = j[1]
+            print("EPOCH:: 1  BATCH:: ", i, "\n","loss:: ",self.loss.calculate(pred_label_batch,ground_label_batch))
+        return
             
 
         
