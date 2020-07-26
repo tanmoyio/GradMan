@@ -51,7 +51,7 @@ class Linear:
         input_batch=np.array_split(input_batch,number_of_batchs)
         label_batch=np.array_split(label_batch,number_of_batchs)
         for (i,j) in enumerate(zip(input_batch,label_batch)):
-            pred_label_batch = np.array([self.eval(k) for k in j[0]])/40000000000
+            pred_label_batch = np.array([self.eval(k) for k in j[0]])
             print(pred_label_batch)
             ground_label_batch = j[1]
             print("EPOCH:: 1  BATCH:: ", i, "\n","loss:: ",self.loss.calculate(pred_label_batch,ground_label_batch))

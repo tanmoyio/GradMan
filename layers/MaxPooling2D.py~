@@ -12,6 +12,9 @@ class MaxPooling2D:
         self.number_of_params = 0
 
 
+    def normalize(self,input_array):
+        return input_array/np.amax(input_array)
+
     def calculate(self):
         input_shape = self.input_array.shape
         i,j,row,col = 0,0,0,0
@@ -31,4 +34,5 @@ class MaxPooling2D:
         else:
             self.result = np.array(self.result).reshape(row,col)
         self.output_shape=self.result.shape
+        #self.result = self.normalize(self.result)
         return self.result

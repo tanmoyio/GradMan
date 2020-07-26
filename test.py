@@ -17,12 +17,12 @@ model.add(MaxPooling2D((2,2)))
 model.add(Flatten())
 model.add(Dense(128))
 model.add(Dense(64))
-model.add(Dense(1))
+model.add(Dense(1,activation=Sigmoid))
 model.summary()
 
 model.eval(image)
 input_data = open("input_data.pickle","rb")
-input_data = np.array(pickle.load(input_data))
+input_data = np.array(pickle.load(input_data))/255.0
 
 label = open("label.pickle","rb")
 label = np.expand_dims(np.array(pickle.load(label)),axis=1)

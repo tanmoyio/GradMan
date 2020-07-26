@@ -22,7 +22,7 @@ class Dense:
 
 
     def normalize(self,input_array):
-        return input_array/np.amax(input_array)
+        return input_array/np.sqrt(np.sum(input_array**2))
 
 
     def calculate(self):
