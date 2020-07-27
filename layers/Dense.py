@@ -22,16 +22,24 @@ class Dense:
 
 
     def normalize(self,input_array):
-        return input_array/np.amax(input_array)
+        return input_array/(np.amax(input_array)+np.amin(input_array))
+
+    
+    def compute_grad(self,input_array):
+        return
 
 
     def calculate(self):
         x1 = np.expand_dims(self.input_array, axis = 0)
         x2 = self.weights
-        self.result = np.squeeze(np.matmul(x1,x2),axis=0)
+        self.result = np.squeeze(np.dot(x1,x2),axis=0)
         self.result = self.normalize(self.result)
         if self.activation != None:
             self.result = self.activation.calculate(self.result)
         self.output_shape = self.result.shape
         return self.result
+
+    def optimize(self,optimizer,loss_grad):
+        if self.activation != None:
+            return
 

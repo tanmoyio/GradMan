@@ -52,9 +52,19 @@ class Linear:
         label_batch=np.array_split(label_batch,number_of_batchs)
         for (i,j) in enumerate(zip(input_batch,label_batch)):
             pred_label_batch = np.array([self.eval(k) for k in j[0]])
-            print(pred_label_batch)
+            print(pred_label_batch.shape)
             ground_label_batch = j[1]
-            print("EPOCH:: 1  BATCH:: ", i, "\n","loss:: ",self.loss.calculate(pred_label_batch,ground_label_batch))
+            print("loss:: ",self.loss.calculate(pred_label_batch,ground_label_batch))
+            loss_grad = self.loss.compute_grad(pred_label_batch,ground_label_batch)
+            print(loss_grad)
+            counter = 0
+            for layer in self.graph[::-1]:
+                loss_grad = layer.optimize(self.optimizer,loss_grad)
+                print(layer.name)
+                counter = counter+1
+                if counter ==3:
+                    break
+
         return
             
 

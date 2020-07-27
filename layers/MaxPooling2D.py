@@ -11,6 +11,8 @@ class MaxPooling2D:
         self.output_shape = None
         self.number_of_params = 0
 
+    def optimize(self,optimizer,loss_grad):
+        return
 
     def calculate(self):
         input_shape = self.input_array.shape

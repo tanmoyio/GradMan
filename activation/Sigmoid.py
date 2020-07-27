@@ -7,3 +7,7 @@ class Sigmoid:
         input_array = input_array.astype("float32")
         return(1./(1.+np.exp(-input_array)))
 
+
+    def compute_grad(input_array):
+        grad = sum(1/(1+np.exp(-input_array)))/input_array.shape[0]
+        return grad*(1-grad)

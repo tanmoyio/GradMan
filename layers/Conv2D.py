@@ -22,7 +22,18 @@ class Conv2D:
 
 
     def normalize(self,input_array):
-        return input_array/np.amax(input_array)
+        return input_array/(np.amax(input_array)+np.amin(input_array))
+
+    
+    def compute_grad(self,input_array):
+        return
+
+    def optimize(self,optimizer,loss_grad):
+        if self.activation != None:
+            activation_grad = self.activation.compute_grad(self.input_array)
+            self.weights = optimizer.optimize(self.weights,loss_grad*activation)
+        else:
+            self.weights = optimizer.optimize(self.weights,loss_grad)
 
 
     def calculate(self): 

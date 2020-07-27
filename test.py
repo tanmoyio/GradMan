@@ -5,6 +5,7 @@ from layers import Dense, Flatten, Conv2D, MaxPooling2D
 from loss import binary_crossentropy
 from model import Linear
 from activation import Sigmoid
+from optimizer import gradient_descent
 
 start_time = time.time()
 image = np.random.rand(64,64)
@@ -27,7 +28,6 @@ input_data = np.array(pickle.load(input_data))/255.0
 label = open("label.pickle","rb")
 label = np.expand_dims(np.array(pickle.load(label)),axis=1)
 print(input_data.shape)
-gradient_descent = "gradient_descent"
 model.compile(optimizer=gradient_descent, loss=binary_crossentropy)
 model.fit(input_data,label,epochs=20,batch_size=16)
 
