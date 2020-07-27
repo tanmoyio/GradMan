@@ -40,6 +40,14 @@ class Dense:
         return self.result
 
     def optimize(self,optimizer,loss_grad):
+        derivative = np.expand_dims(self.input_array,axis=1)
+        temp = derivative
+        for i in range(self.result.shape[0]-1):
+            derivative = np.concatenate((temp,derivative),axis=1)
         if self.activation != None:
-            return
+            self.weights = optimizer.optimize(self.weights,loss_grad,derivative)
+        else:
+            self.weights = optimizer.optimize(self.weights,loss_grad,derivative)
+               
+
 
