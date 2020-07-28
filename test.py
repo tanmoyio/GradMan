@@ -18,7 +18,7 @@ model.add(MaxPooling2D((2,2)))
 model.add(Flatten())
 model.add(Dense(128))
 model.add(Dense(64))
-model.add(Dense(1,activation=Sigmoid))
+model.add(Dense(1,activation=Sigmoid,normalize_signal=False))
 model.summary()
 
 model.eval(image)

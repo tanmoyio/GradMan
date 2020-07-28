@@ -53,16 +53,12 @@ class Linear:
         for (i,j) in enumerate(zip(input_batch,label_batch)):
             pred_label_batch = np.array([self.eval(k) for k in j[0]])
             ground_label_batch = j[1]
-            print(pred_label_batch)
             print("loss:: ",self.loss.calculate(pred_label_batch,ground_label_batch))
             loss_grad = self.loss.compute_grad(pred_label_batch,ground_label_batch)
-            print(loss_grad)
             counter = 0
             for layer in self.graph[::-1]:
                 layer.optimize(self.optimizer,loss_grad)
                 counter = counter+1
                 if counter ==3:
                     break
-
-        loss = self.loss.calculate(np.array([self.eval(i) for i in input_batch[2]]),label_batch[2])
-        print(loss)
+        return
