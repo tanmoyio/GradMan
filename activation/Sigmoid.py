@@ -4,8 +4,6 @@ import numpy as np
 class Sigmoid:
 
     def calculate(input_array):
-        print(input_array)
-        print(1.0/(1.0+np.exp(-input_array)))
         return(1.0/(1.0+np.exp(-input_array)))
 
 

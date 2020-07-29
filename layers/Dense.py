@@ -23,7 +23,7 @@ class Dense:
 
 
     def normalize(self,input_array):
-        return (input_array/(np.amax(input_array)+np.amin(input_array)))*5.0
+        return (input_array/(np.amax(input_array)+np.amin(input_array)))*4.8
 
     
     def compute_grad(self,input_array):
@@ -36,6 +36,8 @@ class Dense:
         self.result = np.squeeze(np.dot(x1,x2),axis=0)
         if self.normalize_signal == True:
             self.result = self.normalize(self.result)
+        if self.normalize_signal == False:
+            self.result = self.result/(self.output_units*np.amax(self.input_array)*np.amax(self.result))
         if self.activation != None:
             self.result = self.activation.calculate(self.result)
         self.output_shape = self.result.shape

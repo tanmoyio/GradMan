@@ -6,4 +6,4 @@ class gradient_descent:
         self.lr = lr
 
     def optimize(weights,grad,derivative):
-        return weights - 0.0001*grad*derivative
+        return weights - 0.0004*grad*derivative

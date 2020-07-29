@@ -27,7 +27,6 @@ input_data = np.array(pickle.load(input_data))/255.0
 
 label = open("label.pickle","rb")
 label = np.expand_dims(np.array(pickle.load(label)),axis=1)
-print(input_data.shape)
 model.compile(optimizer=gradient_descent, loss=binary_crossentropy)
 model.fit(input_data,label,epochs=20,batch_size=16)
 

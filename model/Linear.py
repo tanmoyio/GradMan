@@ -53,7 +53,7 @@ class Linear:
         for (i,j) in enumerate(zip(input_batch,label_batch)):
             pred_label_batch = np.array([self.eval(k) for k in j[0]])
             ground_label_batch = j[1]
-            print("loss:: ",self.loss.calculate(pred_label_batch,ground_label_batch))
+            print("loss:: ",self.loss.calculate(pred_label_batch,ground_label_batch)[-1])
             loss_grad = self.loss.compute_grad(pred_label_batch,ground_label_batch)
             counter = 0
             for layer in self.graph[::-1]:

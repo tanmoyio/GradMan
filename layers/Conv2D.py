@@ -18,10 +18,10 @@ class Conv2D:
 
 
     def init_weights(self):
-        self.weights = np.random.uniform(low=-5.0, high=5.0, size=(self.units, self.kernel_size[0], self.kernel_size[1]))
+        self.weights = np.random.uniform(low=-1.0, high=1.0, size=(self.units, self.kernel_size[0], self.kernel_size[1]))
 
     def normalize(self,input_array):
-        return (input_array/(np.amax(input_array)+np.amin(input_array)))*5.0
+        return (input_array/(np.amax(input_array)+np.amin(input_array)))
 
     
     def compute_grad(self,input_array):
