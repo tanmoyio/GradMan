@@ -43,7 +43,6 @@ print(f"Total execution time::  {end_time - start_time}")
 
 
 
-
 '''
 model2 = Linear()
 model2.add(Dense(64, input_shape=(50,)))
