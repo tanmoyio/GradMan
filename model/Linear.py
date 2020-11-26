@@ -61,7 +61,7 @@ class Linear:
                     layer.optimize(self.optimizer,loss_grad)
                     
                 counter = counter+1
-                if counter ==4:
+                if counter ==6:
                     break
         return
 

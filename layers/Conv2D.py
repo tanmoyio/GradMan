@@ -15,6 +15,7 @@ class Conv2D:
         self.output_shape = None
         self.number_of_params = units * kernel_size[0] * kernel_size[1]
         self.activation = activation
+        self.dw = []
 
 
     def init_weights(self):
@@ -28,6 +29,7 @@ class Conv2D:
         return
 
     def optimize(self,optimizer,loss_grad):
+        derivative = np.sum(self.dw.reshape(self.dw.shape[0]*self.dw.shape[1],self.dw.shape[2])*self.result.reshape(self.result.shape[0]*self.result.reshape[1],self.result.reshape[2]),axis=0)
         if self.activation != None:
             activation_grad = self.activation.compute_grad(self.input_array)
             self.weights = optimizer.optimize(self.weights,loss_grad*activation)
@@ -38,6 +40,7 @@ class Conv2D:
     def calculate(self): 
         i, j, row, col = 0, 0, 0, 0
         sum_conv = 0
+        self.dw = []
         if len(self.input_array.shape) ==2:
             self.input_array = np.expand_dims(self.input_array, axis = 2)
         
@@ -47,6 +50,7 @@ class Conv2D:
                     sum_conv = np.sum([np.multiply(slice_mat[i:i+self.kernel_size[0], j:j+self.kernel_size[1]],weight) for slice_mat in self.input_array.reshape(self.input_array.shape[::-1])])
                     self.result.append(sum_conv)
                     sum_conv = 0
+                self.dw.append([q for p in self.input_array[i:i+self.kernel_size[0],j:j+self.kernel_size[1],:] for q in p])
                 j = j + self.stride
                 if i == 0:
                     col = col + 1
@@ -54,6 +58,8 @@ class Conv2D:
             j = 0
             row = row + 1
 
+        self.dw = np.array(self.dw)
+        print(self.dw.shape)
         self.result = np.array(self.result).reshape(row,col,self.units)
         #self.result = self.normalize(self.result)
         if self.activation != None:
