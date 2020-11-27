@@ -18,24 +18,16 @@ class Conv2D:
         self.dw = []
 
 
+
     def init_weights(self):
         self.weights = np.random.uniform(low=-1.0, high=1.0, size=(self.units, self.kernel_size[0], self.kernel_size[1]))
+
+
 
     def normalize(self,input_array):
         return (input_array/(np.amax(input_array)+np.amin(input_array)))
 
     
-    def compute_grad(self,input_array):
-        return
-
-    def optimize(self,optimizer,loss_grad):
-        derivative = np.sum(self.dw.reshape(self.dw.shape[0]*self.dw.shape[1],self.dw.shape[2])*self.result.reshape(self.result.shape[0]*self.result.reshape[1],self.result.reshape[2]),axis=0)
-        if self.activation != None:
-            activation_grad = self.activation.compute_grad(self.input_array)
-            self.weights = optimizer.optimize(self.weights,loss_grad*activation)
-        else:
-            self.weights = optimizer.optimize(self.weights,loss_grad)
-
 
     def calculate(self): 
         i, j, row, col = 0, 0, 0, 0
@@ -43,7 +35,6 @@ class Conv2D:
         self.dw = []
         if len(self.input_array.shape) ==2:
             self.input_array = np.expand_dims(self.input_array, axis = 2)
-        
         while i<= self.input_array.shape[0] and i+self.kernel_size[0] <= self.input_array.shape[0]:
             while j<= self.input_array.shape[1] and j+self.kernel_size[1] <= self.input_array.shape[1]:
                 for weight in self.weights:
@@ -57,11 +48,9 @@ class Conv2D:
             i = i + self.stride
             j = 0
             row = row + 1
-
         self.dw = np.array(self.dw)
-        print(self.dw.shape)
         self.result = np.array(self.result).reshape(row,col,self.units)
-        #self.result = self.normalize(self.result)
+        self.result = self.normalize(self.result)
         if self.activation != None:
             self.result = self.activation.calculate(self.result)
         temp_result = self.result

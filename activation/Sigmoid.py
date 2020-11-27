@@ -1,10 +1,11 @@
 import numpy as np
 
 
-class Sigmoid:
 
+class Sigmoid:
     def calculate(input_array):
         return(1.0/(1.0+np.exp(-input_array)))
+
 
 
     def compute_grad(input_array):

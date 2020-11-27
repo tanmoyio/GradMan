@@ -17,18 +17,17 @@ class Dense:
         self.normalize_signal = normalize_signal
 
 
+
     def init_weights(self):
         self.weights = np.random.uniform(low=-5.0,high=5.0,size=(self.units,self.output_units))
         self.number_of_params = self.units * self.output_units
+
 
 
     def normalize(self,input_array):
         return (input_array/(np.amax(input_array)+np.amin(input_array)))*4.8
 
     
-    def compute_grad(self,input_array):
-        return
-
 
     def calculate(self):
         x1 = np.expand_dims(self.input_array, axis = 0)
@@ -42,16 +41,4 @@ class Dense:
             self.result = self.activation.calculate(self.result)
         self.output_shape = self.result.shape
         return self.result
-
-    def optimize(self,optimizer,loss_grad):
-        derivative = np.expand_dims(self.input_array,axis=1)
-        temp = derivative
-        for i in range(self.result.shape[0]-1):
-            derivative = np.concatenate((temp,derivative),axis=1)
-        if self.activation != None:
-            self.weights = optimizer.optimize(self.weights,loss_grad,derivative)
-        else:
-            self.weights = optimizer.optimize(self.weights,loss_grad,derivative)
-               
-
 

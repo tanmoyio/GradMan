@@ -1,6 +1,7 @@
 import numpy as np
 
 
+
 class Flatten:
     def __init__(self):
         self.input_array = None
@@ -9,8 +10,7 @@ class Flatten:
         self.output_shape = None
         self.number_of_params = 0
 
-    def optimize(self,optimizer,loss):
-        return
+
 
     def calculate(self):
         input_shape = self.input_array.shape
