@@ -8,6 +8,6 @@ from gradman import Tensor
 
 x = Tensor([[1.0,2.0,3.0]])
 y = Tensor([[-3.0],[-2.0],[-1.0]])
-z = x.matmul(y)
+z = x.dot(y)
 print(z)
 ```
