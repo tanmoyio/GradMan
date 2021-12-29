@@ -23,7 +23,7 @@ class Tensor:
         o = Tensor(np.matmul(self.data,i.data), (self,i), _op='matmul')
 
         def _backward(input_grad):
-            input_grad = np.array([[input_grad]]) if input_grad not isinstance(np.ndarray) else input_grad
+            input_grad = np.array([[input_grad]]) if not isinstance(input_grad, np.ndarray) else input_grad
             self.grad = input_grad @ i.data.swapaxes(-2, -1)
             i.grad = self.data.swapaxes(-2, -1) @ input_grad
                 
