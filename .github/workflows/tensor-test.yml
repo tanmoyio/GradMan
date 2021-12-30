@@ -4,22 +4,18 @@ on: push
 jobs:
   test:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
-    
+    timeout-minutes: 10   
     steps:
       - name: Check out repository code
-      uses: actions/checkout@v2
-      
+        uses: actions/checkout@v2   
       - name: Setup Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: "3.x"
-          
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.x"    
       - name: Install dependencies
-      if: steps.cache-pipenv.outputs.cache-hit != 'true'
-      run: |
-        pipenv install --deploy --dev
-        
+        if: steps.cache-pipenv.outputs.cache-hit != 'true'
+        run: |
+          pipenv install --deploy --dev
       - name: Run tensor tests
-      run: |
-          python -m pytest --import-mode=append tests 
+        run: |
+          python -m pytest --import-mode=append tests
