@@ -2,6 +2,11 @@
 
 Baby deep learning library.
 
+### Install 🐤
+```
+pip install gradman
+```
+
 ### Tensor Operation 🥚
 ```python3
 from gradman import Tensor
@@ -56,4 +61,12 @@ for i in range(5):
     # I haven't added any loss function yet, lets just backprop from here
     r.backward()
     m.optimize(optimizer)
+```
+
+### Contribute 🍯
+Any contribution would be greatly appreciated. 
+Please make sure you pass these before submitting a PR
+```
+make lint
+python -m pytest --import-mode=append tests/
 ```
