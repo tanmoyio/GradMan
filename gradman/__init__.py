@@ -1,2 +1,7 @@
-from gradman.tensor import Tensor
-from gradman.module import Module
+from .tensor import Tensor
+from .module import Module
+
+__all__ = [
+    "Tensor",
+    "Module",
+]
