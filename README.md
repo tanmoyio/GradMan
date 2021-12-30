@@ -1,4 +1,4 @@
-# GradMan
+# GradMan [![CI](https://github.com/tanmoyio/GradMan/actions/workflows/lint.yml/badge.svg)](https://github.com/tanmoyio/GradMan/actions/workflows/lint.yml)
 
 Baby deep learning library.
 
