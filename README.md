@@ -1,8 +1,8 @@
-# GradMan [![CI](https://github.com/tanmoyio/GradMan/actions/workflows/lint.yml/badge.svg)](https://github.com/tanmoyio/GradMan/actions/workflows/lint.yml)
+# GradMan [![CI](https://github.com/tanmoyio/GradMan/actions/workflows/lint.yml/badge.svg)](https://github.com/tanmoyio/GradMan/actions/workflows/lint.yml)[![Tensor-Test](https://github.com/tanmoyio/GradMan/actions/workflows/tensor-test.yml/badge.svg)](https://github.com/tanmoyio/GradMan/actions/workflows/tensor-test.yml)
 
 Baby deep learning library.
 
-### Tensor Operation
+### Tensor Operation 🥚
 ```python3
 from gradman import Tensor
 
@@ -12,7 +12,7 @@ z = x @ y
 print(z)
 ```
 
-### Autograd engine
+### Autograd engine 🐣
 ```python3
 from gradman import Tensor
 
@@ -25,7 +25,7 @@ result.backward()
 print(x.grad,y.grad,z.grad) 
 ```
 
-### Model and Training Loop
+### Model and Training Loop 🐥
 ```python3
 import gradman.nn as nn
 from gradman import Tensor, Module
