@@ -17,3 +17,6 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.isort]
 skip = [".gitignore", "__init__.py"]
+
+[scripts]
+15test = "pytest"
