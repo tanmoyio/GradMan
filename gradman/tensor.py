@@ -19,7 +19,7 @@ class Tensor:
     def eye(cls, dim, **kwargs):
         return cls(np.eye(dim).astype(np.float32), **kwargs)
 
-    def matmul(self, i):
+    def __matmul__(self, i):
         o = Tensor(np.matmul(self.data,i.data), (self,i), _op='matmul')
 
         def _backward(input_grad):
@@ -29,6 +29,35 @@ class Tensor:
                 
         o._backward = _backward
         return o
+    matmul = __matmul__
+
+    def __add__(self, i):
+        o = Tensor(self.data + i.data, (self, i), _op='add')
+
+        def _backward(input_grad):
+            input_grad = np.array([[input_grad]]) if not isinstance(input_grad, np.ndarray) else input_grad
+            if input_grad.shape == self.shape: self.grad = input_grad
+            else: self.grad = np.reshape(np.array([[sum(k) for k in input_grad]]), self.shape)
+            if input_grad.shape == i.shape: i.grad = input_grad
+            else: i.grad = np.reshape(np.array([[sum(k) for k in input_grad]]), i.shape)
+
+        o._backward = _backward
+        return o
+    add = __add__
+
+    def __sub__(self, i):
+        o = Tensor(self.data - i.data, (self, i), _op='sub')
+
+        def _backward(input_grad):
+            input_grad = np.array([[input_grad]]) if not isinstance(input_grad, np.ndarray) else input_grad
+            if input_grad.shape == self.shape: self.grad = input_grad
+            else: self.grad = np.reshape(np.array([[sum(k) for k in input_grad]]), self.shape)
+            if input_grad.shape == i.shape: i.grad = -input_grad
+            else: i.grad = np.reshape(-np.array([[sum(k) for k in input_grad]]), i.shape)
+
+        o._backward = _backward
+        return o
+    sub = __sub__
 
     dot = matmul
 
@@ -41,7 +70,7 @@ class Tensor:
                     build_graph(branch)
                 graph.append(n)
         build_graph(self)
-
+        
         self.grad = 1
         for n in reversed(graph):
             n._backward(n.grad)
