@@ -1,2 +1,2 @@
-def gradient_descent(w, grad, lr=0.01):
+def gde(w, grad, lr=0.1):
     return w - lr * grad

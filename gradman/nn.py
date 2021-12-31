@@ -14,3 +14,10 @@ class Linear(Module):
     def forward(self, i):
         o = (i @ self.w) + self.b
         return o
+
+
+# activation functions
+
+# loss functions
+def mse(yp, yl):
+    return (yl - yp).square().mean()

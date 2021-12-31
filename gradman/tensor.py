@@ -58,18 +58,21 @@ class Tensor:
                 if not isinstance(input_grad, np.ndarray)
                 else input_grad
             )
+            a, b = broadcast(self.data, i.data)
+
             if input_grad.shape == (1, 1):
                 input_grad = input_grad[0, 0]
-                self.grad = input_grad * broadcast(self.data, i.data)
-                i.grad = broadcast(i.data, self.data) * input_grad
+                self.grad = input_grad * a
+                i.grad = b * input_grad
             else:
-                self.grad = input_grad @ broadcast(self.data, i.data)
-                i.grad = broadcast(i.data, self.data) @ input_grad
+                self.grad = input_grad
+                i.grad = input_grad
 
         o._backward = _backward
         return o
 
     matmul = __matmul__
+    dot = matmul
 
     def __add__(self, i):
         o = Tensor(self.data + i.data, (self, i), _op="add")
@@ -121,7 +124,35 @@ class Tensor:
 
     sub = __sub__
 
-    dot = matmul
+    def mean(self):
+        o = Tensor(np.mean(self.data), (self,), _op="mean")
+
+        def _backward(input_grad):
+            input_grad = (
+                np.array([[input_grad]])
+                if not isinstance(input_grad, np.ndarray)
+                else input_grad
+            )
+            self.grad = (
+                np.ones((self.data.shape[0], 1)) * input_grad / self.data.shape[0]
+            )
+
+        o._backward = _backward
+        return o
+
+    def square(self):
+        o = Tensor(np.square(self.data), (self,), _op="square")
+
+        def _backward(input_grad):
+            input_grad = (
+                np.array([[input_grad]])
+                if not isinstance(input_grad, np.ndarray)
+                else input_grad
+            )
+            self.grad = 2 * self.data
+
+        o._backward = _backward
+        return o
 
     def backward(self):
         graph, checked = [], set()
