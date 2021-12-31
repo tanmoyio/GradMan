@@ -1,6 +1,30 @@
 import numpy as np
 
 
+def broadcast(a, b):
+    if a.shape[0] == b.shape[1]:
+        return b, a
+
+    if a.shape[0] < b.shape[1]:
+        a_g = np.sum(b, axis=-1)
+        a_g = np.array([a_g for _ in range(a.shape[0])])
+        a_g = np.reshape(a_g, a.shape)
+
+        b_g = np.array([a for _ in range(b.shape[1])]).T
+        b_g = np.reshape(b_g, b.shape)
+        return a_g, b_g
+
+    if a.shape[0] > b.shape[1]:
+        a_g = np.array([b for _ in range(a.shape[0])])
+        a_g = np.reshape(a_g, a.shape)
+
+        b_g = np.sum(a, axis=0)
+        b_g = np.array([b_g for _ in range(b.shape[1])])
+        b_g = np.reshape(b_g, b.shape)
+
+    return a_g, b_g
+
+
 class Tensor:
     def __init__(self, data, _ctx=(), _op=""):
         self.data = (
@@ -34,8 +58,13 @@ class Tensor:
                 if not isinstance(input_grad, np.ndarray)
                 else input_grad
             )
-            self.grad = input_grad @ i.data.swapaxes(-2, -1)
-            i.grad = self.data.swapaxes(-2, -1) @ input_grad
+            if input_grad.shape == (1, 1):
+                input_grad = input_grad[0, 0]
+                self.grad = input_grad * broadcast(self.data, i.data)
+                i.grad = broadcast(i.data, self.data) * input_grad
+            else:
+                self.grad = input_grad @ broadcast(self.data, i.data)
+                i.grad = broadcast(i.data, self.data) @ input_grad
 
         o._backward = _backward
         return o
