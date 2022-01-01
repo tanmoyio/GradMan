@@ -6,18 +6,14 @@ sys.path.append(".")
 
 from gradman import Tensor  # noqa
 
-x = Tensor([[1.5, -2.8, 3.3]])
-y = Tensor([[-3.8], [-21.2], [-18.5]])
+def test_sum():
+    a = Tensor([1,2,3], requires_grad=True)
+    b = Tensor([9,8,7], requires_grad=True)
 
-
-def matmul():
-    return round(float((x @ y).data[0, 0]), 2)
-
-
-def add():
-    return round(float((x + y).data[1, 2]), 2)
-
-
-def test_matmul():
-    assert matmul() == round(-7.389, 2)
-    assert add() == round(-17.900002, 2)
+    r1 = a.sum()
+    r1.backward()
+    assert a.grad.data.tolist() == [1,1,1]
+    
+    r2 = b.sum()
+    r2.backward(Tensor(43))
+    assert b.grad.data.tolist() == [43,43,43]

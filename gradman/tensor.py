@@ -1,171 +1,70 @@
 import numpy as np
+from typing import List, Optional, NamedTuple, Callable, Union
 
+Tensorable = Union[int, float, list, np.ndarray]
 
-def broadcast(a, b):
-    if a.shape[0] == b.shape[1]:
-        return b, a
+def UnTensored(t: Tensorable) -> np.ndarray:
+    if isinstance(t, np.ndarray):
+        return t
+    else:
+        return np.array(t)
 
-    if a.shape[0] < b.shape[1]:
-        a_g = np.sum(b, axis=-1)
-        a_g = np.array([a_g for _ in range(a.shape[0])])
-        a_g = np.reshape(a_g, a.shape)
-
-        b_g = np.array([a for _ in range(b.shape[1])]).T
-        b_g = np.reshape(b_g, b.shape)
-        return a_g, b_g
-
-    if a.shape[0] > b.shape[1]:
-        a_g = np.array([b for _ in range(a.shape[0])])
-        a_g = np.reshape(a_g, a.shape)
-
-        b_g = np.sum(a, axis=0)
-        b_g = np.array([b_g for _ in range(b.shape[1])])
-        b_g = np.reshape(b_g, b.shape)
-
-    return a_g, b_g
-
+class ContextGraph(NamedTuple):
+    tensor: 'Tensor'
+    grad_fn: Callable[[np.ndarray], np.ndarray]
 
 class Tensor:
-    def __init__(self, data, _ctx=(), _op=""):
-        self.data = (
-            np.array(data, dtype=np.float32)
-            if not isinstance(data, np.ndarray)
-            else data
-        )
-        self.grad = 0
+    def __init__(self,
+            data: Tensorable,
+            requires_grad:bool = False,
+            _ctx:List[ContextGraph] = None) -> None:
 
-        self._backward = lambda x: None
-        self._ctx = set(_ctx)
-        self._op = _op
+        self.data = UnTensored(data)
+        self.requires_grad = requires_grad
+        self._ctx = _ctx or []
+        self.grad: Optional['Tensor'] = None
+        self.shape = self.data.shape
 
-    def __repr__(self):
-        return f"<Tensor {self.data!r}>"
+        if self.requires_grad:
+            self.zero_grad()
 
-    @property
-    def shape(self):
-        return self.data.shape
 
-    @classmethod
-    def eye(cls, dim, **kwargs):
-        return cls(np.eye(dim).astype(np.float32), **kwargs)
+    def __repr__(self) -> str:
+        return f"<Tensor ({self.data}, requires_grad={self.requires_grad})>"
 
-    def __matmul__(self, i):
-        o = Tensor(np.matmul(self.data, i.data), (self, i), _op="matmul")
+    def zero_grad(self) -> None:
+        self.grad = Tensor(np.zeros_like(self.data))
 
-        def _backward(input_grad):
-            input_grad = (
-                np.array([[input_grad]])
-                if not isinstance(input_grad, np.ndarray)
-                else input_grad
-            )
-            a, b = broadcast(self.data, i.data)
+    def backward(self, grad: 'Tensor' = None) -> None:
+        assert self.requires_grad, "Called backward() on non-requires-grad Tensor"
 
-            if input_grad.shape == (1, 1):
-                input_grad = input_grad[0, 0]
-                self.grad = input_grad * a
-                i.grad = b * input_grad
+        if grad == None:
+            if self.shape == ():
+                grad = Tensor(1)
             else:
-                self.grad = input_grad
-                i.grad = input_grad
+                raise RuntimeError("`grad` must be specified for non 0 tensor")
 
-        o._backward = _backward
-        return o
+        self.grad.data += grad.data
 
-    matmul = __matmul__
-    dot = matmul
+        for c in self._ctx:
+            c.tensor.backward(Tensor(c.grad_fn(grad.data)))
 
-    def __add__(self, i):
-        o = Tensor(self.data + i.data, (self, i), _op="add")
+        
 
-        def _backward(input_grad):
-            input_grad = (
-                np.array([[input_grad]])
-                if not isinstance(input_grad, np.ndarray)
-                else input_grad
-            )
-            if input_grad.shape == self.shape:
-                self.grad = input_grad
+
+    def sum(self) -> 'Tensor':
+        
+        def _sum(t: Tensor) -> Tensor:
+            data = t.data.sum()
+            requires_grad = t.requires_grad
+
+            if requires_grad:
+                def grad_fn(grad: np.ndarray) -> np.ndarray:
+                    return grad * np.ones_like(t.data)
+                _ctx = [ContextGraph(t, grad_fn)]
             else:
-                self.grad = np.reshape(
-                    np.array([[sum(k) for k in input_grad]]), self.shape
-                )
-            if input_grad.shape == i.shape:
-                i.grad = input_grad
-            else:
-                i.grad = np.reshape(np.array([[sum(k) for k in input_grad]]), i.shape)
+                _ctx = []
 
-        o._backward = _backward
-        return o
+            return Tensor(data, requires_grad, _ctx)
 
-    add = __add__
-
-    def __sub__(self, i):
-        o = Tensor(self.data - i.data, (self, i), _op="sub")
-
-        def _backward(input_grad):
-            input_grad = (
-                np.array([[input_grad]])
-                if not isinstance(input_grad, np.ndarray)
-                else input_grad
-            )
-            if input_grad.shape == self.shape:
-                self.grad = input_grad
-            else:
-                self.grad = np.reshape(
-                    np.array([[sum(k) for k in input_grad]]), self.shape
-                )
-            if input_grad.shape == i.shape:
-                i.grad = -input_grad
-            else:
-                i.grad = np.reshape(-np.array([[sum(k) for k in input_grad]]), i.shape)
-
-        o._backward = _backward
-        return o
-
-    sub = __sub__
-
-    def mean(self):
-        o = Tensor(np.mean(self.data), (self,), _op="mean")
-
-        def _backward(input_grad):
-            input_grad = (
-                np.array([[input_grad]])
-                if not isinstance(input_grad, np.ndarray)
-                else input_grad
-            )
-            self.grad = (
-                np.ones((self.data.shape[0], 1)) * input_grad / self.data.shape[0]
-            )
-
-        o._backward = _backward
-        return o
-
-    def square(self):
-        o = Tensor(np.square(self.data), (self,), _op="square")
-
-        def _backward(input_grad):
-            input_grad = (
-                np.array([[input_grad]])
-                if not isinstance(input_grad, np.ndarray)
-                else input_grad
-            )
-            self.grad = 2 * self.data
-
-        o._backward = _backward
-        return o
-
-    def backward(self):
-        graph, checked = [], set()
-
-        def build_graph(n):
-            if n not in checked:
-                checked.add(n)
-                for branch in n._ctx:
-                    build_graph(branch)
-                graph.append(n)
-
-        build_graph(self)
-
-        self.grad = 1
-        for n in reversed(graph):
-            n._backward(n.grad)
+        return _sum(self)
