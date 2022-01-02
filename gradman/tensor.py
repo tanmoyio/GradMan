@@ -55,10 +55,19 @@ class Tensor:
             c.tensor.backward(Tensor(c.grad_fn(grad.data)))
 
     def sum(self) -> "Tensor":
+        """Sum of elements of a tensor.
+
+        Returns
+        -------
+        "Tensor"
+
+        """
         o, requires_grad, _ctx = sum_(self)
         return Tensor(o, requires_grad, _ctx)
 
     def add(t1: "Tensor", t2: "Tensor") -> "Tensor":
+        """Addition of two tensors"""
+
         o, requires_grad, _ctx = add_(t1, t2)
         return Tensor(o, requires_grad, _ctx)
 
