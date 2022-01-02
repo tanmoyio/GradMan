@@ -18,3 +18,16 @@ def test_sum():
     r2 = b.sum()
     r2.backward(Tensor(43))
     assert b.grad.data.tolist() == [43, 43, 43]
+
+
+def test_add():
+    a = Tensor([1, 2, 3], requires_grad=True)
+    b = Tensor([9, 8, 7], requires_grad=True)
+
+    r1 = a + b
+    r1.backward(Tensor([-10, 20, -30]))
+    assert a.grad.data.tolist() == [-10, 20, -30] and b.grad.data.tolist() == [
+        -10,
+        20,
+        -30,
+    ]

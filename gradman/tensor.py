@@ -1,23 +1,17 @@
-from typing import Callable, List, NamedTuple, Optional, Union
+from typing import List, Optional, Union
 
 import numpy as np
 
-Tensorable = Union[int, float, list, np.ndarray]
+from gradman.context_graph import ContextGraph
 
-
-def UnTensored(t: Tensorable) -> np.ndarray:
-    if isinstance(t, np.ndarray):
-        return t
-    else:
-        return np.array(t)
-
-
-class ContextGraph(NamedTuple):
-    tensor: "Tensor"
-    grad_fn: Callable[[np.ndarray], np.ndarray]
+"""Tensor supported Operations"""
+from gradman.ops import add_, sum_
 
 
 class Tensor:
+
+    Tensorable = Union[int, float, list, np.ndarray]
+
     def __init__(
         self,
         data: Tensorable,
@@ -25,7 +19,7 @@ class Tensor:
         _ctx: List[ContextGraph] = None,
     ) -> None:
 
-        self.data = UnTensored(data)
+        self.data = self.UnTensored(data)
         self.requires_grad = requires_grad
         self._ctx = _ctx or []
         self.grad: Optional["Tensor"] = None
@@ -33,6 +27,12 @@ class Tensor:
 
         if self.requires_grad:
             self.zero_grad()
+
+    def UnTensored(self, t: Tensorable) -> np.ndarray:
+        if isinstance(t, np.ndarray):
+            return t
+        else:
+            return np.array(t)
 
     def __repr__(self) -> str:
         return f"<Tensor ({self.data}, requires_grad={self.requires_grad})>"
@@ -55,19 +55,11 @@ class Tensor:
             c.tensor.backward(Tensor(c.grad_fn(grad.data)))
 
     def sum(self) -> "Tensor":
-        def _sum(t: Tensor) -> Tensor:
-            data = t.data.sum()
-            requires_grad = t.requires_grad
+        o, requires_grad, _ctx = sum_(self)
+        return Tensor(o, requires_grad, _ctx)
 
-            if requires_grad:
+    def add(t1: "Tensor", t2: "Tensor") -> "Tensor":
+        o, requires_grad, _ctx = add_(t1, t2)
+        return Tensor(o, requires_grad, _ctx)
 
-                def grad_fn(grad: np.ndarray) -> np.ndarray:
-                    return grad * np.ones_like(t.data)
-
-                _ctx = [ContextGraph(t, grad_fn)]
-            else:
-                _ctx = []
-
-            return Tensor(data, requires_grad, _ctx)
-
-        return _sum(self)
+    __add__ = add

@@ -1,4 +1,4 @@
 lint:
 	isort .
 	black .
-	flake8 .
+	flake8 --ignore=F821 .
