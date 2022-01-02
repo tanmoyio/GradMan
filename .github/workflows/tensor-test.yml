@@ -17,4 +17,4 @@ jobs:
           pip install pytest numpy wheel
       - name: Run tensor tests
         run: |
-          python -m pytest --import-mode=append tests
+          python -m pytest --import-mode=append tests -v
