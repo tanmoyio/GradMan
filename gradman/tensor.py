@@ -38,14 +38,14 @@ class Tensor:
         return f"<Tensor ({self.data}, requires_grad={self.requires_grad})>"
 
     def zero_grad(self) -> None:
-        self.grad = Tensor(np.zeros_like(self.data))
+        self.grad = Tensor(np.zeros_like(self.data, dtype=np.float64))
 
     def backward(self, grad: "Tensor" = None) -> None:
         assert self.requires_grad, "Called backward() on non-requires-grad Tensor"
 
         if grad is None:
             if self.shape == ():
-                grad = Tensor(1)
+                grad = Tensor(1.0)
             else:
                 raise RuntimeError("`grad` must be specified for non 0 tensor")
 
