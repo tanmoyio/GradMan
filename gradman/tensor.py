@@ -2,9 +2,7 @@ from typing import List, Optional, Union
 
 import numpy as np
 
-from gradman.context_graph import ContextGraph
-
-"""Tensor supported Operations"""
+from gradman.ctg import ContextGraph
 from gradman.ops import add_, mul_, neg_, sum_
 
 
@@ -67,26 +65,27 @@ class Tensor:
 
     def add(t1: "Tensor", t2: "Tensor") -> "Tensor":
         """Addition of two tensors"""
-
         o, requires_grad, _ctx = add_(t1, t2)
         return Tensor(o, requires_grad, _ctx)
 
     __add__ = add
 
     def mul(t1: "Tensor", t2: "Tensor") -> "Tensor":
-
+        """Multiplication of two tensors"""
         o, requires_grad, _ctx = mul_(t1, t2)
         return Tensor(o, requires_grad, _ctx)
 
     __mul__ = mul
 
     def neg(self) -> "Tensor":
+        """Negative of a tensor"""
         o, requires_grad, _ctx = neg_(self)
         return Tensor(o, requires_grad, _ctx)
 
     __neg__ = neg
 
     def sub(t1: "Tensor", t2: "Tensor") -> "Tensor":
+        """Subtraction of two tensors"""
         return t1 + (-t2)
 
     __sub__ = sub

@@ -2,7 +2,7 @@ from typing import List, Tuple
 
 import numpy as np
 
-from gradman.context_graph import ContextGraph
+from gradman.ctg import ContextGraph
 
 """Collection of all Tensor supported operations"""
 
