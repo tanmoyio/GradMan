@@ -140,3 +140,27 @@ def neg_(t: "Tensor") -> Tuple[np.ndarray, bool, List[ContextGraph]]:
         _ctx = []
 
     return o, requires_grad, _ctx
+
+
+def matmul_(t1: "Tensor", t2: "Tensor") -> Tuple[np.ndarray, bool, List[ContextGraph]]:
+
+    o = t1.data @ t2.data
+
+    requires_grad = t1.requires_grad or t2.requires_grad
+    _ctx: List[ContextGraph] = []
+
+    if t1.requires_grad:
+
+        def grad_fn1(grad: np.ndarray) -> np.ndarray:
+            return grad @ t2.data.T
+
+        _ctx.append(ContextGraph(t1, grad_fn1))
+
+    if t2.requires_grad:
+
+        def grad_fn2(grad: np.ndarray) -> np.ndarray:
+            return t1.data.T @ grad
+
+        _ctx.append(ContextGraph(t2, grad_fn2))
+
+    return o, requires_grad, _ctx

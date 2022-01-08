@@ -60,10 +60,8 @@ def test_mul():
     b = Tensor([9, 8, 7], requires_grad=True)
     r2 = a * b
     r2.backward(Tensor([[-1, 2, -3], [-1, 2, -3]]))
-    assert a.grad.data.tolist() == [
-        [-9, 16, -21],
-        [-9, 16, -21],
-    ] and b.grad.data.tolist() == [-5, 14, -30]
+    assert a.grad.data.tolist() == [[-9, 16, -21], [-9, 16, -21]]
+    assert b.grad.data.tolist() == [-5, 14, -30]
 
 
 def test_neg():
@@ -83,3 +81,14 @@ def test_sub():
         -6,
         -8,
     ]
+
+
+def test_matmul():
+    a = Tensor([[1, 2], [3, 4], [5, 6]], requires_grad=True)
+    b = Tensor([[7], [8]], requires_grad=True)
+    c = a @ b
+    assert c.data.tolist() == [[23], [53], [83]]
+    c.backward(Tensor([[1], [1], [1]]))
+
+    assert a.grad.data.tolist() == [[7, 8], [7, 8], [7, 8]]
+    assert b.grad.data.tolist() == [[9], [12]]

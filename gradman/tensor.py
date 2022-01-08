@@ -3,7 +3,7 @@ from typing import List, Optional, Union
 import numpy as np
 
 from gradman.ctg import ContextGraph
-from gradman.ops import add_, mul_, neg_, sum_
+from gradman.ops import add_, matmul_, mul_, neg_, sum_
 
 
 class Tensor:
@@ -17,7 +17,7 @@ class Tensor:
         _ctx: List[ContextGraph] = None,
     ) -> None:
 
-        self.data = self.UnTensored(data)
+        self._data = self.UnTensored(data)
         self.requires_grad = requires_grad
         self._ctx = _ctx or []
         self.grad: Optional["Tensor"] = None
@@ -25,6 +25,15 @@ class Tensor:
 
         if self.requires_grad:
             self.zero_grad()
+
+    @property
+    def data(self) -> np.ndarray:
+        return self._data
+
+    @data.setter
+    def data(self, t: np.ndarray):
+        self._data = t
+        self.grad = None
 
     def UnTensored(self, t: Tensorable) -> np.ndarray:
         if isinstance(t, np.ndarray):
@@ -89,3 +98,10 @@ class Tensor:
         return t1 + (-t2)
 
     __sub__ = sub
+
+    def matmul(t1: "Tensor", t2: "Tensor") -> "Tensor":
+        """Tensor Matrix Multiplication"""
+        o, requires_grad, _ctx = matmul_(t1, t2)
+        return Tensor(o, requires_grad, _ctx)
+
+    __matmul__ = matmul
