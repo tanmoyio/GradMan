@@ -3,7 +3,7 @@ from typing import List, Optional, Union
 import numpy as np
 
 from gradman.ctg import ContextGraph
-from gradman.ops import add_, matmul_, mul_, neg_, sum_, slice_
+from gradman.ops import add_, matmul_, mul_, neg_, slice_, sum_
 
 
 class Tensor:

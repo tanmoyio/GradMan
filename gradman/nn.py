@@ -1,9 +1,10 @@
-from gradman import Tensor
 import numpy as np
 
-class Module:
+from gradman import Tensor
 
-    def _forward(self,i):
+
+class Module:
+    def _forward(self, i):
         return self.forward(i)
 
     __call__ = _forward
@@ -11,9 +12,9 @@ class Module:
     def parameters(self):
         return [getattr(self, i) for i in self.__dict__]
 
-    
+
 class Linear(Module):
-    def __init__(self, idim:int, odim:int):
+    def __init__(self, idim: int, odim: int):
         super(Linear, self).__init__()
 
         self.idim = idim

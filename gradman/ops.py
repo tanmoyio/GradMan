@@ -179,7 +179,7 @@ def slice_(t: "Tensor", idx) -> Tuple[np.ndarray, bool, List[ContextGraph]]:
             return partial_grad
 
         _ctx.append(ContextGraph(t, grad_fn))
-            
+
     else:
         _ctx = []
 
