@@ -164,3 +164,23 @@ def matmul_(t1: "Tensor", t2: "Tensor") -> Tuple[np.ndarray, bool, List[ContextG
         _ctx.append(ContextGraph(t2, grad_fn2))
 
     return o, requires_grad, _ctx
+
+
+def slice_(t: "Tensor", idx) -> Tuple[np.ndarray, bool, List[ContextGraph]]:
+
+    o = t.data[idx]
+    requires_grad = t.requires_grad
+
+    if requires_grad:
+
+        def grad_fn(grad: np.ndarray) -> np.ndarray:
+            partial_grad = np.zeros_like(o)
+            partial_grad[idx] = grad
+            return partial_grad
+
+        _ctx.append(ContextGraph(t, grad_fn))
+            
+    else:
+        _ctx = []
+
+    return o, requires_grad, _ctx

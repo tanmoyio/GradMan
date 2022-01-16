@@ -3,7 +3,7 @@ from typing import List, Optional, Union
 import numpy as np
 
 from gradman.ctg import ContextGraph
-from gradman.ops import add_, matmul_, mul_, neg_, sum_
+from gradman.ops import add_, matmul_, mul_, neg_, sum_, slice_
 
 
 class Tensor:
@@ -43,6 +43,10 @@ class Tensor:
 
     def __repr__(self) -> str:
         return f"<Tensor ({self.data}, requires_grad={self.requires_grad})>"
+
+    def __getitem__(self, idx) -> "Tensor":
+        o, requires_grad, _ctx = slice_(self, idx)
+        return Tensor(o, requires_grad, _ctx)
 
     def zero_grad(self) -> None:
         self.grad = Tensor(np.zeros_like(self.data, dtype=np.float64))
