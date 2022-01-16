@@ -1,13 +1,14 @@
 # GradMan [![CI](https://github.com/tanmoyio/GradMan/actions/workflows/lint.yml/badge.svg)](https://github.com/tanmoyio/GradMan/actions/workflows/lint.yml)[![Tensor-Test](https://github.com/tanmoyio/GradMan/actions/workflows/tensor-test.yml/badge.svg)](https://github.com/tanmoyio/GradMan/actions/workflows/tensor-test.yml)
-Baby deep learning library
 
+<img src="https://imgur.com/qdTcXdY.png" height=200>
 
+Baby deep learning library. 
 
 ### Install
 ```
 pip install gradman
 ```
-### Gradman Tensor Operations
+### Gradman Tensor Operations 🥚
 
 Just like `numpy.ndarray` operations `gradman` tensor supports mathematical operations. 
 
@@ -32,7 +33,7 @@ print(a.grad)
 $ <Tensor ([1. 1. 1.], requires_grad=False)>
 ```
 
-### Use `gradman.nn.Module` to create complex neural network
+### Use `gradman.nn.Module` to create complex neural network 🐥
 ```python3
 import gradman.nn as nn
 from gradman import Tensor
@@ -52,7 +53,28 @@ print(out)
 ```
 It makes everything easy. Still there is always option of creating your own nn operations from scratch, and the `BabyGrad` engine will handle the backprop.
 
-### Build from source
+### Training loop 🐙
+Simpler than `torch`
+
+```python3
+from gradman.optim import GDE
+
+model = BabyModel()
+optim = GDE(lr=0.001)
+
+for _ in range(EPOCH):
+    '''Dataloading, batching module will be added in future versions'''
+    '''also the `criterion` is a dummy loss func. We will add those in future versions. But you can always create loss functions from basic tensor operations. 
+    
+    y = model(inputs)
+    loss = criterion(y, labels)
+    y.backward()
+    optim.step(model.parameters())
+```
+`gradman` doesn't do `model.zero_grad()`. Why? Whenever the contents of a `Tensor` object being changed it will invalidate the gradients by itself and initialize fresh zero gradients.
+
+
+### Build from source 🐛
 ```
 git clone https://github.com/tanmoyio/GradMan 
 cd GradMan
@@ -62,3 +84,22 @@ cat pyproject.toml | grep "version"
 cd dist/
 pip install gradman-<version>-none-any.whl
 ```
+
+### Contribute 🍯
+
+Before contributing, you must know the purpose of this library. I haven't made this library to create SOTA models with it but to preserve the core mathematical foundation of deep learning. 
+
+#### Spaces where you can contribute. 
+1. Zero level - Writing Tensor operations (Backward needed)
+2. Creating High level API/Layers for Deep Neural Network (No need to do backward)
+3. Writing unit tests
+4. Creating examples of the library, models and sharing.
+
+Run these two lines of command to pass the unit tests. 
+
+```
+make lint
+python -m pytest --import-mode=append tests -v
+```
+
+Current version of gradman uses basic tensor operation wrapped arround standard numpy. But I am also working on a gpu and RISCV version of `gradman`. Mail me if you are interested of being part of core developer of `gradman`.
