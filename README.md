@@ -64,7 +64,7 @@ optim = GDE(lr=0.001)
 
 for _ in range(EPOCH):
     '''Dataloading, batching module will be added in future versions'''
-    '''also the `criterion` is a dummy loss func. We will add those in future versions. But you can always create loss functions from basic tensor operations. 
+    '''also the `criterion` is a dummy loss func. We will add those in future versions. But you can always create loss functions from basic tensor operations.'''
     
     y = model(inputs)
     loss = criterion(y, labels)
