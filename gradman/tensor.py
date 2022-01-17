@@ -81,7 +81,6 @@ class Tensor:
         """Negative of a tensor"""
         return Tensor(*neg_(self))
 
-
     def sub(t1: "Tensor", t2: "Tensor") -> "Tensor":
         """Subtraction of two tensors"""
         return t1 + (-t2)
