@@ -66,46 +66,32 @@ class Tensor:
             c.tensor.backward(Tensor(c.grad_fn(grad.data)))
 
     def sum(self) -> "Tensor":
-        """Sum of elements of a tensor.
-
-        Returns
-        -------
-        "Tensor"
-
-        """
-        o, requires_grad, _ctx = sum_(self)
-        return Tensor(o, requires_grad, _ctx)
+        """Sum of elements of a tensor"""
+        return Tensor(*sum_(self))
 
     def add(t1: "Tensor", t2: "Tensor") -> "Tensor":
         """Addition of two tensors"""
-        o, requires_grad, _ctx = add_(t1, t2)
-        return Tensor(o, requires_grad, _ctx)
-
-    __add__ = add
+        return Tensor(*add_(t1, t2))
 
     def mul(t1: "Tensor", t2: "Tensor") -> "Tensor":
         """Multiplication of two tensors"""
-        o, requires_grad, _ctx = mul_(t1, t2)
-        return Tensor(o, requires_grad, _ctx)
-
-    __mul__ = mul
+        return Tensor(*mul_(t1, t2))
 
     def neg(self) -> "Tensor":
         """Negative of a tensor"""
-        o, requires_grad, _ctx = neg_(self)
-        return Tensor(o, requires_grad, _ctx)
+        return Tensor(*neg_(self))
 
-    __neg__ = neg
 
     def sub(t1: "Tensor", t2: "Tensor") -> "Tensor":
         """Subtraction of two tensors"""
         return t1 + (-t2)
 
-    __sub__ = sub
-
     def matmul(t1: "Tensor", t2: "Tensor") -> "Tensor":
         """Tensor Matrix Multiplication"""
-        o, requires_grad, _ctx = matmul_(t1, t2)
-        return Tensor(o, requires_grad, _ctx)
+        return Tensor(*matmul_(t1, t2))
 
+    __add__ = add
+    __mul__ = mul
+    __neg__ = neg
+    __sub__ = sub
     __matmul__ = matmul
