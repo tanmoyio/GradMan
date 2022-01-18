@@ -35,6 +35,23 @@ def sum_(t: "Tensor") -> Tuple[np.ndarray, bool, List[ContextGraph]]:
     return o, requires_grad, _ctx
 
 
+def pow_(t: "Tensor", p: float) -> Tuple[np.ndarray, bool, List[ContextGraph]]:
+    """Tensor to the power `p`"""
+    o = t.data ** p
+    requires_grad = t.requires_grad
+
+    if requires_grad:
+
+        def grad_fn(grad: np.ndarray) -> np.ndarray:
+            return grad * (t.data ** (p - 1)) * p
+
+        _ctx = [ContextGraph(t, grad_fn)]
+    else:
+        _ctx = []
+
+    return o, requires_grad, _ctx
+
+
 def add_(t1: "Tensor", t2: "Tensor") -> Tuple[np.ndarray, bool, List[ContextGraph]]:
     """Addition of two tensors
 
