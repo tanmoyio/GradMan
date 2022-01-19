@@ -3,7 +3,7 @@ from typing import List, Optional, Union
 import numpy as np
 
 from gradman.ctg import ContextGraph
-from gradman.ops import add_, matmul_, mul_, neg_, pow_, slice_, sum_
+from gradman.ops import add_, div_, matmul_, mul_, neg_, pow_, slice_, sum_
 
 
 class Tensor:
@@ -93,8 +93,13 @@ class Tensor:
         """Tensor power"""
         return Tensor(*pow_(self, p))
 
+    def div(t1: "Tensor", t2: "Tensor") -> "Tensor":
+        """Tensor division"""
+        return Tensor(*div_(t1, t2))
+
     __add__ = add
     __mul__ = mul
+    __truediv__ = div
     __neg__ = neg
     __sub__ = sub
     __matmul__ = matmul

@@ -147,6 +147,47 @@ def mul_(t1: "Tensor", t2: "Tensor") -> Tuple[np.ndarray, bool, List[ContextGrap
     return o, requires_grad, _ctx
 
 
+def div_(t1: "Tensor", t2: "Tensor") -> Tuple[np.ndarray, bool, List[ContextGraph]]:
+    o = t1.data / t2.data
+
+    requires_grad = t1.requires_grad or t2.requires_grad
+    _ctx: List[ContextGraph] = []
+
+    if t1.requires_grad:
+
+        def grad_fn1(grad: np.ndarray) -> np.ndarray:
+            grad = grad * (1 / t2.data)
+
+            for _ in range(grad.ndim - t1.data.ndim):
+                grad = grad.sum(axis=0)
+
+            for i, dim in enumerate(t1.shape):
+                if dim == 1:
+                    grad = grad.sum(axis=i, keepdims=True)
+
+            return grad
+
+        _ctx.append(ContextGraph(t1, grad_fn1))
+
+    if t2.requires_grad:
+
+        def grad_fn2(grad: np.ndarray) -> np.ndarray:
+            grad = grad * (-t1.data / (t2.data ** 2))
+
+            for _ in range(grad.ndim - t2.data.ndim):
+                grad = grad.sum(axis=0)
+
+            for i, dim in enumerate(t2.shape):
+                if dim == 1:
+                    grad = grad.sum(axis=i, keepdims=True)
+
+            return grad
+
+        _ctx.append(ContextGraph(t2, grad_fn2))
+
+    return o, requires_grad, _ctx
+
+
 def neg_(t: "Tensor") -> Tuple[np.ndarray, bool, List[ContextGraph]]:
 
     o = -t.data
