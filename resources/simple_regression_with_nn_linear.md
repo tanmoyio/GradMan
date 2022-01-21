@@ -7,17 +7,26 @@ In this documentation we will try to solve this using `Linear` module from `grad
 Lets use [California housing dataset](https://scikit-learn.org/stable/modules/generated/sklearn.datasets.fetch_california_housing.html) from `scikit-learn`.
 ```python3
 from gradman import Tensor
+import pandas as pd
 from sklearn.datasets import fetch_california_housing
 
 dataset = fetch_california_housing()
 
 # creating inputs and labels 
-inputs = dataset.data     # shape-> (20640, 8)
-labels = dataset.targets  # shape-> (20640,)
+inputs = pd.DataFrame(dataset.data)     # shape-> (20640, 8)
+labels = pd.DataFrame(dataset.targets)  # shape-> (20640,)
 
 # normalizing the dataset
 """There are some other ways to normalizing the dataset, but if you are seeking fun, try this"""
-inputs, labels = inputs/inputs.max(), labels/labels.max()
+
+# preparing the normalizer
+def normalizer(x):
+    return (x - x.mean()) / x.std()
+    
+# normalization
+inputs = inputs.apply(lambda x: normalizer(x))
+labels = labels.apply(lambda x: normalizer(x))
+
 
 # Tensorify 
 inputs, labels= Tensor(inputs), Tensor(labels)
@@ -77,10 +86,13 @@ def MSELoss(pred, label):
 ### Training loop
 
 ```python3
-EPOCH = 20
-batch_size = 32
+import tqdm 
+
+EPOCH = 10
+batch_size = 16
 generator_length = sum(1 for _ in generator(inputs, labels, batch_size))
 
+history = []
 for i in range(EPOCH):
     avg_loss = 0
     
@@ -91,5 +103,23 @@ for i in range(EPOCH):
         optim.step(model.parameters())
         avg_loss += loss.data
         
-    print("loss: ", avg_loss)
+    history.append(f"Epoch:{i}, loss: {avg_loss/generator_length}")
+    
+print(history)
 ```
+Output
+```
+100%|██████████████████████████████████████████████████████████████████████████████████████████████████████| 10/10 [16:42<00:00, 100.26s/it]
+
+['Epoch:0, loss: 1.0708987647046646', 
+'Epoch:1, loss: 0.44320831007158107', 
+'Epoch:2, loss: 0.42144465194942876', 
+'Epoch:3, loss: 0.4148460952723904', 
+'Epoch:4, loss: 0.41056946676311107', 
+'Epoch:5, loss: 0.40720832080746344', 
+'Epoch:6, loss: 0.40454978511430495', 
+'Epoch:7, loss: 0.4024258263336942', 
+'Epoch:8, loss: 0.4007285866164422', 
+'Epoch:9, loss: 0.3993680843491425']
+```
+So you can see how the convergence is going. Congratulations, you have successfully trained a linear regression model with `gradman.nn.Linear` 🐣
