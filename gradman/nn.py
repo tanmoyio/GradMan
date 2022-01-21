@@ -20,8 +20,8 @@ class Linear(Module):
         self.idim = idim
         self.odim = odim
 
-        self.w = Tensor(np.random.randn(idim, odim), requires_grad=True)
-        self.b = Tensor(np.random.randn(), requires_grad=True)
+        self.w = Tensor(np.random.uniform(-1, 1, (idim, odim)), requires_grad=True)
+        self.b = Tensor(np.random.uniform(-1, 1, ()), requires_grad=True)
 
     def forward(self, i: Tensor):
         return (i @ self.w) + self.b

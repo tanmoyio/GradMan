@@ -37,9 +37,9 @@ class Tensor:
 
     def UnTensored(self, t: Tensorable) -> np.ndarray:
         if isinstance(t, np.ndarray):
-            return t
+            return t.astype(np.float32)
         else:
-            return np.array(t)
+            return np.array(t).astype(np.float32)
 
     def __repr__(self) -> str:
         return f"<Tensor ({self.data}, requires_grad={self.requires_grad})>"

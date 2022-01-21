@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "gradman"
-version = "0.0.1b8"
+version = "0.0.1b9"
 description = "Baby Deep Learning Library"
 authors = ["tanmoyio <tanmoyf2@gmail.com>"]
 license = "MIT"
