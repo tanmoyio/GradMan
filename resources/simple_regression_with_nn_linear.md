@@ -60,7 +60,7 @@ class CalNet(nn.Module):
     """California Housing price prediction model"""
     
     def __init__(self):
-        super(RegressionNet, self).__init__()
+        super(CalNet, self).__init__()
         self.l1 = nn.Linear(8,1)
 
     def forward(self, i):
@@ -71,7 +71,7 @@ lets initialize the model and the optimizer
 ```python3
 from gradman.optim import GDE
 
-model = RegressionNet()
+model = CalNet()
 optim = GDE(lr=0.001)
 ```
 
