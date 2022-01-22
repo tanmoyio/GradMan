@@ -93,12 +93,12 @@ batch_size = 16
 generator_length = sum(1 for _ in generator(inputs, labels, batch_size))
 
 history = []
-for i in range(EPOCH):
+for i in tqdm.tqdm(range(EPOCH)):
     avg_loss = 0
     
     for data in generator(inputs, labels, batch_size):
         i, o = data
-        loss = MSELoss(model(inputs), out)
+        loss = MSELoss(model(i), o)
         loss.backward()
         optim.step(model.parameters())
         avg_loss += loss.data
