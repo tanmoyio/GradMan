@@ -2,7 +2,7 @@
 
 <img src="https://imgur.com/qdTcXdY.png" height=200>
 
-Baby deep learning library. 
+Baby deep learning library. This library doesn't do much in terms of solving complex models. Check [gradman resources](https://github.com/tanmoyio/GradMan/tree/master/resources). We are replacing the mathematical computations with c++ backend. Mail me if you want to join GradMan's acccelarated computing group. 
 
 ### Install
 ```
