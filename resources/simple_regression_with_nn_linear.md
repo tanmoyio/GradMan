@@ -14,7 +14,7 @@ dataset = fetch_california_housing()
 
 # creating inputs and labels 
 inputs = pd.DataFrame(dataset.data)     # shape-> (20640, 8)
-labels = pd.DataFrame(dataset.targets)  # shape-> (20640,)
+labels = pd.DataFrame(dataset.target)  # shape-> (20640,)
 
 # normalizing the dataset
 """There are some other ways to normalizing the dataset, but if you are seeking fun, try this"""
